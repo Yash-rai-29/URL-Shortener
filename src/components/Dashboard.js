@@ -56,7 +56,7 @@ const Dashboard = ({ userId }) => {
   };
 
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-lg w-full max-w-4xl mx-auto">
+    <div className="bg-slate-400 shadow overflow-hidden sm:rounded-lg w-full max-w-4xl mx-auto">
       <div className="px-4 py-5 sm:p-6 flex justify-between items-center">
         <h3 className="text-lg leading-6 font-medium text-gray-900">Your Dashboard</h3>
         <button onClick={handleLogout} className="...">
@@ -65,7 +65,9 @@ const Dashboard = ({ userId }) => {
       </div>
       <ShortenForm userId={userId} onUrlShortened={handleUrlShortened} />
       {loading ? (
-        <p>Loading...</p>
+        <div className="flex justify-center items-center h-screen">
+        <div className="relative w-24 h-24 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-indigo-500"></div>
+      </div>
       ) : (
         <UrlList urls={urls} onDelete={handleDelete} />
       )}

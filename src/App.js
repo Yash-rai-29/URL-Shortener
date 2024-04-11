@@ -11,7 +11,13 @@ const App = () => {
   const { currentUser, checkingSession } = useAuth(); // Utilize custom hook
 
   if (checkingSession) {
-    return <div>Loading...</div>; // Consider a more engaging loading indicator
+    return (
+      <div className="z-10 fixed top-0 left-0 w-full h-full bg-blue-500 flex justify-center items-center">
+        <div className="w-64 h-4 bg-red-400 rounded-full">
+          <div className="h-full bg-orange-500 rounded-full animate-pulse"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
