@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { shortenUrl } from '../services/urlService';
 
-const ShortenForm = ({ userId }) => {
+const ShortenForm = ({ userId, onUrlShortened  }) => {
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
   const [error, setError] = useState(''); // Add state for error handling
-
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       // Attempt to shorten the URL
       const result = await shortenUrl(longUrl, userId);
@@ -15,6 +16,7 @@ const ShortenForm = ({ userId }) => {
         setShortUrl(result.shortUrl); // Update state with just the shortUrl string
         setLongUrl(''); // Reset longUrl input field
         setError(''); // Clear any previous errors
+        onUrlShortened(result);
       } else {
         throw new Error('Invalid response from the server.');
       }
@@ -22,7 +24,10 @@ const ShortenForm = ({ userId }) => {
       // Handle errors (e.g., network issues, server errors)
       console.error('Error shortening URL:', error);
       setError('Failed to shorten URL. Please try again.'); // Provide feedback to the user
+    } finally {
+      setLoading(false);
     }
+    
   };
 
   return (
@@ -70,6 +75,7 @@ const ShortenForm = ({ userId }) => {
           </button>
           {error && <p className="text-sm text-red-500">{error}</p>} {/* Display any error messages */}
         </form>
+        {loading && <p>Loading...</p>}
       </div>
     </div>
   );

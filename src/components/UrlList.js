@@ -1,9 +1,14 @@
 import React from 'react';
 import { incrementClicks } from '../services/urlService';
+import { FaTrashAlt } from 'react-icons/fa'; // Import the trash icon
 
-const UrlList = ({ urls }) => {
+const UrlList = ({ urls, onDelete }) => {
   const handleClick = async (shortUrl) => {
     await incrementClicks(shortUrl);
+  };
+
+  const handleDelete = (urlId) => {
+    onDelete(urlId);
   };
 
   return (
@@ -25,6 +30,12 @@ const UrlList = ({ urls }) => {
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{url.longUrl}</dd>
               <dt className="text-sm font-medium text-gray-500">Clicks</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{url.clicks}</dd>
+              <dt className="text-sm font-medium text-gray-500">Actions</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                <button onClick={() => handleDelete(url.id)} className="text-red-500 hover:text-red-700">
+                  <FaTrashAlt />
+                </button>
+              </dd>
             </div>
           ))}
         </dl>

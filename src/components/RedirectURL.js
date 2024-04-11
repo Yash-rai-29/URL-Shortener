@@ -9,31 +9,31 @@ const Redirect = () => {
 
   useEffect(() => {
     const fetchAndRedirect = async () => {
+      console.log("Short URL from params:", shortUrl); // Log the shortUrl for debugging
       try {
         const q = query(collection(db, 'urls'), where('shortUrl', '==', shortUrl));
         const snapshot = await getDocs(q);
+  
+        console.log("Snapshot size:", snapshot.size); // Log the number of documents found
         if (!snapshot.empty) {
           const doc = snapshot.docs[0];
           const { longUrl } = doc.data();
-          await incrementClicks(shortUrl); // Ensure this function correctly updates Firestore
-          
-          // Check if the URL starts with http:// or https://, prepend http:// if not
-          const protocolPattern = /^https?:\/\//i;
-          const correctedUrl = protocolPattern.test(longUrl) ? longUrl : `http://${longUrl}`;
-
-          window.location.href = correctedUrl;
+          console.log("Found long URL:", longUrl); // Log the found long URL for debugging
+          await incrementClicks(shortUrl);
+          // Rest of your code...
+          window.location.href = 'http://' + longUrl;
         } else {
-          // Handle case where short URL is not found
-          window.location.href = '/'; // Navigate to home page or a custom 404 page
+          console.error('Short URL not found:', shortUrl);
+          window.location.href = '/404';
         }
       } catch (error) {
         console.error('Error redirecting:', error);
-        window.location.href = '/'; // Navigate to home page or error page on exception
+        window.location.href = '/error';
       }
     };
-
+  
     fetchAndRedirect();
-  }, [shortUrl]); // Removed db from dependencies as it's likely a constant
+  }, [shortUrl]);
 
   return null; // Render nothing, as the component will redirect or navigate elsewhere
 };
