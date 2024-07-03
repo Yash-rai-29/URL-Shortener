@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { loginUser } from '../services/authService';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -12,10 +14,19 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       await loginUser(email, password);
+      // Show success toast
+      toast.success('Logged in successfully!', {
+        position: "top-right",
+autoClose: 5000,
+      });
       navigate('/');
     } catch (error) {
       console.error('Error logging in:', error);
-      // Display error message to the user
+      // Show error toast
+      toast.error(error.message || 'Error logging in. Please check your credentials.', {
+        position: "top-right",
+        autoClose: 5000,
+      });
     }
   };
 
@@ -71,6 +82,7 @@ const LoginForm = () => {
           </p>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

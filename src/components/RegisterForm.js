@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { registerUser, sendEmailVerification } from '../services/authService';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RegisterForm = () => {
   const [email, setEmail] = useState('');
@@ -16,10 +18,16 @@ const RegisterForm = () => {
       const userCredential = await registerUser(email, password);
       await sendEmailVerification(userCredential.user);
       setSuccess(true);
-      setError('');
+      toast.success('Registration successful! Verification email sent.', {
+        position: "top-right",
+autoClose: 5000,
+      });
     } catch (error) {
-      console.error('Error registering user:', error);
-      setError('Failed to register. Please try again.');
+      console.error('Error registering user:', error.message); // Log the error message
+      toast.error(error.message || 'Failed to register. Please try again.', {
+        position: "top-right",
+        autoClose: 5000,
+      });
     }
   };
 
@@ -90,6 +98,7 @@ const RegisterForm = () => {
             </Link>
           </p>
         </div>
+        <ToastContainer/>
       </div>
     </div>
   );
